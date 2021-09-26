@@ -1,5 +1,5 @@
 const express = require('express')
-const Car = require('./cars-model,js')
+const Car = require('./cars-model.js')
 const {
     checkCarId,
     checkCarPayload,
@@ -23,7 +23,12 @@ router.get('/:id', checkCarId, async (req, res) => {
 })
 
 router.post('/', checkCarPayload, checkVinNumberValid, checkVinNumberUnique, async (req, res, next) => {
-    res.json('posting a new car')
+    try{
+        const cars = await Car.create(req.body)
+        res.json(cars)
+    } catch (error) {
+        next(error)
+    }
 })
 
 module.exports = router
